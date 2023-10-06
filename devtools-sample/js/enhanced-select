@@ -1,0 +1,384 @@
+import {d as e, N as t, i as s, r as n, B as i, h as l} from "./base-element-e0a9d6c8.js";
+function a(e, t) {
+    for (var s in t)
+        e[s] = t[s];
+    return e
+}
+function o(e) {
+    var t = [];
+    function s(e) {
+        for (var s = [], n = 0; n < t.length; n++)
+            t[n] === e ? e = null : s.push(t[n]);
+        t = s
+    }
+    function n(s, n, i) {
+        e = n ? s : a(a({}, e), s);
+        for (var l = t, o = 0; o < l.length; o++)
+            l[o](e, i)
+    }
+    return e = e || {},
+    {
+        action: function(t) {
+            function s(e) {
+                n(e, !1, t)
+            }
+            return function() {
+                for (var n = arguments, i = [e], l = 0; l < arguments.length; l++)
+                    i.push(n[l]);
+                var a = t.apply(this, i);
+                if (null != a)
+                    return a.then ? a.then(s) : s(a)
+            }
+        },
+        setState: n,
+        subscribe: function(e) {
+            return t.push(e),
+            function() {
+                s(e)
+            }
+        },
+        unsubscribe: s,
+        getState: function() {
+            return e
+        }
+    }
+}
+const r = new URLSearchParams(window.location.search).has("debug")
+  , h = {
+    isSideNavExpanded: !1,
+    isSearchActive: !1
+};
+let c;
+c = r ? function(e) {
+    var t = window.__REDUX_DEVTOOLS_EXTENSION__ || window.top.__REDUX_DEVTOOLS_EXTENSION__
+      , s = !1;
+    return t ? (e.devtools || (e.devtools = t.connect(),
+    e.devtools.subscribe((function(t) {
+        "DISPATCH" === t.type && t.state && (s = "JUMP_TO_ACTION" === t.payload.type || "JUMP_TO_STATE" === t.payload.type,
+        e.setState(JSON.parse(t.state), !0))
+    }
+    )),
+    e.devtools.init(e.getState()),
+    e.subscribe((function(t, n) {
+        var i = n && n.name || "setState";
+        s ? s = !1 : e.devtools.send(i, t)
+    }
+    ))),
+    e) : (console.warn("Please install/enable Redux devtools extension"),
+    e.devtools = null,
+    e)
+}(o(h)) : o(h);
+const d = new WeakMap
+  , u = window.navigator.userAgent.indexOf("Trident/") > 0
+  , p = e((e=>i=>{
+    if (!(i instanceof t))
+        throw new Error("unsafeSVG can only be used in text bindings");
+    const l = d.get(i);
+    if (void 0 !== l && s(e) && e === l.value && i.value === l.fragment)
+        return;
+    const a = document.createElement("template")
+      , o = a.content;
+    let r;
+    u ? (a.innerHTML = `<svg>${e}</svg>`,
+    r = o.firstChild) : (r = document.createElementNS("http://www.w3.org/2000/svg", "svg"),
+    o.appendChild(r),
+    r.innerHTML = e),
+    o.removeChild(r),
+    n(o, r.firstChild);
+    const h = document.importNode(o, !0);
+    i.setValue(h),
+    d.set(i, {
+        value: e,
+        fragment: h
+    })
+}
+));
+var f = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>';
+const b = e=>{
+    const t = Math.random().toString(36).substr(2, 9);
+    return document.getElementById(e + t) ? b(e) : t
+}
+  , g = c.action(((e,t,s)=>({
+    filters: Object.assign({}, e.filters || {}, {
+        [t]: s
+    })
+})))
+  , m = c.action(((e,t,s)=>{
+    const n = e.filters[t];
+    return e.filters[t] = n.filter((e=>e.value !== s.value)),
+    e
+}
+))
+  , w = c.action((()=>({
+    filters: {}
+})));
+const v = new RegExp("^(Key|Digit|Numpad)","i");
+class y extends i {
+    static get formAssociated() {
+        return !0
+    }
+    constructor() {
+        super();
+        try {
+            this.internals = this.attachInternals()
+        } catch (e) {
+            console.warn("ElementInternals not supported")
+        }
+        this.handleLabelClick = this.handleLabelClick.bind(this),
+        this.handleLabelKeydown = this.handleLabelKeydown.bind(this),
+        this.handleFocusOut = this.handleFocusOut.bind(this),
+        this.handleSelection = this.handleSelection.bind(this),
+        this.handleListKeydown = this.handleListKeydown.bind(this),
+        this.classList.add("enhanced-select");
+        const e = this._getSelect();
+        this.name = this.name || this._getName(e),
+        this.multiple = this.multiple || e.hasAttribute("multiple"),
+        this.label = "",
+        this.fixedLabel = !1,
+        this.options = this._getOptions(),
+        this._dropdownId = this._generateId("dropdown"),
+        this._labelId = this._generateId("label"),
+        this._elements = {},
+        this.focusedIndex = -1,
+        this.setValue(this.getSelectedValues())
+    }
+    static get properties() {
+        return {
+            name: {
+                type: String,
+                reflect: !0
+            },
+            label: {
+                type: String,
+                reflect: !0
+            },
+            value: {
+                type: Array,
+                reflect: !0
+            },
+            open: {
+                type: Boolean,
+                reflect: !0
+            },
+            multiple: {
+                type: Boolean,
+                reflect: !0
+            },
+            options: {
+                type: Array,
+                reflect: !1
+            },
+            fixedLabel: {
+                type: Boolean,
+                reflect: !0
+            }
+        }
+    }
+    firstUpdated(e) {
+        super.firstUpdated(e),
+        this._elements.label = this.querySelector(`#${this._labelId}`),
+        this._elements.list = this.querySelector(`#${this._dropdownId}`),
+        this._elements.listItems = this.querySelector(`#${this._dropdownId} li`),
+        this.addEventListener("focusout", this.handleFocusOut)
+    }
+    get displayLabel() {
+        return 0 === this.value.length || this.fixedLabel ? this.label : this.multiple ? `${this.value.length} items selected` : this.options.find((e=>e.value === this.value[0])).label
+    }
+    connectedCallback() {
+        super.connectedCallback(),
+        c.subscribe(this.onStoreUpdate.bind(this))
+    }
+    onStoreUpdate(e) {
+        const t = (e.filters || {})[this.name] || [];
+        this.setValue(t.map((e=>e.value)))
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback(),
+        this.removeEventListener("focusout", this.handleFocusOut),
+        this._elements.label.removeEventListener("click", this.handleLabelClick),
+        this._elements.label.removeEventListener("keydown", this.handleLabelKeydown),
+        Array.from(this._elements.listItems).forEach((e=>e.removeEventListener("click", this.handleSelection))),
+        this._elements.list.removeEventListener("keydown", this.handleSelection)
+    }
+    setValue(e) {
+        this.value = e,
+        this.options.forEach((t=>t.selected = e.includes(t.value)));
+        const t = new FormData;
+        e.forEach((e=>t.append(this.name, e))),
+        this.internals && this.internals.setFormValue(t),
+        this.dispatchEvent(new Event("change",{
+            bubbles: !0,
+            cancelable: !0
+        }))
+    }
+    render() {
+        return l`
+      <div
+        class="enhanced-select__wrapper display-flex align-center"
+        ?open="${this.open}"
+      >
+        <label
+          id="${this._labelId}"
+          class="display-flex align-center justify-content-between"
+          aria-controls="${this._dropdownId}"
+          tabindex="0"
+          @click="${this.handleLabelClick}"
+          @keydown="${this.handleLabelKeydown}"
+        >
+          <span>${this.displayLabel}</span> ${p('<svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">\n  <path d="M0 0L5 5L10 0L0 0Z" fill="currentColor"/>\n</svg>')}
+        </label>
+
+        <ul
+          id="${this._dropdownId}"
+          class="enhanced-select__options"
+          @keydown="${this.handleListKeydown}"
+        >
+          ${this.options.map((e=>{
+            const t = this.value?.includes(e.value);
+            return l`
+              <li
+                class="button width-full gap-bottom-100 display-flex align-center justify-content-between"
+                id="${e.id}"
+                tabindex="0"
+                @click="${this.handleSelection}"
+                ?selected="${t}"
+              >
+                ${e.label}
+                ${this.multiple && t ? p(f) : ""}
+              </li>
+            `
+        }
+        ))}
+        </ul>
+      </div>
+    `
+    }
+    _getName(e) {
+        if (!e.hasAttribute("name"))
+            throw new Error("Missing attribute: name");
+        return e.getAttribute("name")
+    }
+    _getSelect() {
+        const e = this.querySelector("select");
+        if (!e || !e.firstChild)
+            throw new Error("Missing element: select");
+        return e
+    }
+    _getOptions() {
+        const e = this.querySelectorAll("option");
+        if (0 === e.length)
+            throw new Error("Missing element: option");
+        return Array.from(e).map(((e,t)=>({
+            id: e.id || this._generateId(`option-${t}`),
+            label: e.label,
+            value: e.value,
+            selected: e.hasAttribute("selected")
+        })))
+    }
+    _generateId(e) {
+        const t = `enhanced-select-${e}`;
+        return `${t}-${b(t)}`
+    }
+    handleLabelClick() {
+        this.toggleOpen()
+    }
+    handleLabelKeydown(e) {
+        switch ("Tab" !== e.code && e.preventDefault(),
+        e.code) {
+        case "Enter":
+        case "Escape":
+            this.toggleOpen();
+            break;
+        case "ArrowDown":
+            this.focusByIndex(this.focusedIndex + 1);
+            break;
+        case "Tab":
+            this.open && (this.focusedIndex = 0);
+            break;
+        case "Home":
+        case "PageUp":
+            this.focusByIndex(0);
+            break;
+        case "End":
+        case "PageDown":
+            this.focusByIndex(this.options.length - 1);
+            break;
+        default:
+            v.test(e.code) && this.focusByEventKey(e.key)
+        }
+    }
+    handleFocusOut(e) {
+        this.contains(e.relatedTarget) || (this.open = !1)
+    }
+    handleSelection(e) {
+        e.preventDefault();
+        const t = e.target.closest("li").getAttribute("id") || null
+          , s = this.options.find((e=>t === e.id));
+        if (!s)
+            throw new Error(`Missing option: ${t}`);
+        this.selectOption(s)
+    }
+    handleListKeydown(e) {
+        if (this.open)
+            switch ("Tab" !== e.code && e.preventDefault(),
+            e.code) {
+            case "Enter":
+            case "Escape":
+                this.selectByIndex(this.focusedIndex);
+                break;
+            case "ArrowDown":
+                this.focusByIndex(this.focusedIndex + 1);
+                break;
+            case "ArrowUp":
+                this.focusByIndex(this.focusedIndex - 1);
+                break;
+            case "Tab":
+                this.incrementFocus();
+                break;
+            case "Home":
+            case "PageUp":
+                this.focusByIndex(0);
+                break;
+            case "End":
+            case "PageDown":
+                this.focusByIndex(this.options.length - 1);
+                break;
+            default:
+                v.test(e.code) && this.focusByEventKey(e.key)
+            }
+    }
+    focusByEventKey(e) {
+        const t = String(e).toLowerCase()
+          , s = this.options.findIndex((e=>e.label.toLowerCase().startsWith(t)));
+        -1 !== s && this.focusByIndex(s)
+    }
+    toggleOpen() {
+        this.open = !this.open
+    }
+    focusByIndex(e) {
+        if (this.open) {
+            e < 0 ? e = 0 : e >= this.options.length && (e = this.options.length - 1);
+            this.querySelectorAll("li")[e].focus(),
+            this.focusedIndex = e
+        }
+    }
+    incrementFocus() {
+        const e = this.focusedIndex + 1;
+        e > this.options.length - 1 || (this.focusedIndex = e)
+    }
+    selectByIndex(e) {
+        e < 0 && (e = 0),
+        e >= this.options.length && (e = this.options.length - 1),
+        this.selectOption(this.options[e])
+    }
+    selectOption(e) {
+        this.multiple ? this.setValue(this.options.filter((t=>t === e ? !t.selected : t.selected)).map((e=>e.value))) : this.setValue([e.value]),
+        g(this.name, this.options.filter((e=>e.selected))),
+        this.open = this.multiple
+    }
+    getSelectedValues() {
+        return this.options.filter((e=>e.selected)).map((e=>e.value))
+    }
+}
+customElements.define("enhanced-select", y);
+export {y as E, w as a, g as b, f as c, b as g, m as r, c as s, p as u};
